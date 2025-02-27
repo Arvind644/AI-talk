@@ -1,5 +1,20 @@
 import { NextResponse } from 'next/server';
-import { Voice, VoiceSettings } from 'elevenlabs-node';
+import { Voice, VoiceSettings, Speaker } from 'elevenlabs-node';
+
+const voiceSettings: Record<Speaker, VoiceSettings> = {
+  girlfriend: {
+    stability: 0.71,
+    similarity_boost: 0.85,
+    style: 0.5,
+    use_speaker_boost: true,
+  },
+  boyfriend: {
+    stability: 0.65,
+    similarity_boost: 0.75,
+    style: 0.35,
+    use_speaker_boost: true,
+  }
+};
 
 export async function POST(req: Request) {
   try {
@@ -8,6 +23,8 @@ export async function POST(req: Request) {
     const voiceId = speaker === 'girlfriend' 
       ? process.env.GIRLFRIEND_VOICE_ID 
       : process.env.BOYFRIEND_VOICE_ID;
+
+    const settings = voiceSettings[speaker as Speaker];
 
     const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
       method: 'POST',
@@ -18,11 +35,8 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         text,
-        model_id: 'eleven_monolingual_v1',
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.75,
-        },
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: settings,
       }),
     });
 

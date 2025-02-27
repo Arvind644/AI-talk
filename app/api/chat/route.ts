@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "system",
-          content: "You are participating in a conversation between an AI girlfriend and boyfriend. Keep responses natural, caring, and conversational. Limit responses to 1-2 sentences.",
+          content: "You are participating in a conversation between an AI girlfriend and boyfriend. Keep responses natural, caring, and conversational. Limit responses to 1-2 sentences. IMPORTANT: Do not include 'AI Girlfriend:' or 'AI Boyfriend:' prefixes in your responses - just provide the direct response.",
         },
         ...messages
       ],

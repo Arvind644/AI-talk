@@ -12,6 +12,16 @@ export default function Conversation() {
   });
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const cleanMessage = (content: string) => {
+    // Remove any "AI Girlfriend:" or "AI Boyfriend:" prefixes
+    let cleaned = content.replace(/^(AI (Girlfriend|Boyfriend):)\s*/i, '');
+    
+    // Split by potential mid-message speaker prefixes and take only the first part
+    cleaned = cleaned.split(/AI (Girlfriend|Boyfriend):/i)[0].trim();
+    
+    return cleaned;
+  };
+
   const generateResponse = async (speaker: 'girlfriend' | 'boyfriend') => {
     try {
       setState(prev => ({ ...prev, isLoading: true }));
@@ -27,9 +37,11 @@ export default function Conversation() {
       
       if (!chatResponse.ok) throw new Error(chatData.error);
 
+      const cleanContent = cleanMessage(chatData.content);
+
       const newMessage: Message = {
         role: 'assistant',
-        content: chatData.content,
+        content: cleanContent,
         speaker,
       };
 
@@ -38,7 +50,7 @@ export default function Conversation() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          text: chatData.content,
+          text: cleanContent,
           speaker,
         }),
       });
@@ -94,7 +106,7 @@ export default function Conversation() {
             } max-w-[80%]`}
           >
             <p className="text-sm font-semibold mb-1">
-              {message.speaker === 'girlfriend' ? 'AI Girlfriend' : 'AI Boyfriend'}
+              {message.speaker === 'girlfriend' ? 'Girlfriend' : 'Boyfriend'}
             </p>
             <p>{message.content}</p>
           </div>
