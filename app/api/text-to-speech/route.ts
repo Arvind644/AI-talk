@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Voice, VoiceSettings, Speaker } from 'elevenlabs-node';
+import { VoiceSettings, Speaker } from 'elevenlabs-node';
 
 const voiceSettings: Record<Speaker, VoiceSettings> = {
   girlfriend: {
